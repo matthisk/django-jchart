@@ -1,0 +1,32 @@
+language: python
+sudo: false
+python:
+  - 2.7
+  - 3.4
+  - 3.5
+env:
+  - DJANGO="django>=1.10.2"
+  - DJANGO="django>=1.9.3,<1.10.0"
+  - DJANGO="django>=1.8.10,<1.9.0"
+  - DJANGO="django==1.7.11"
+  - DJANGO="django==1.6.11"
+  - DJANGO="django==1.5.12"
+matrix:
+  exclude:
+    - python: 3.5
+      env: DJANGO="django==1.7.11"
+    - python: 3.5
+      env: DJANGO="django==1.6.11"
+    - python: 3.5
+      env: DJANGO="django==1.5.12"
+install:
+  - travis_retry pip install pep8==1.7.0
+  - travis_retry pip install $DJANGO
+script:
+  - cd demo_project && python manage.py test
+  # - coverage run --source=stream_django setup.py test
+after_script:
+  # ensure we validate against pep standards
+  - "pep8 --exclude=migrations --ignore=E501,E225,W293 stream"
+# after_success:
+#    - coveralls
