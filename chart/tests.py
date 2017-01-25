@@ -32,6 +32,10 @@ class LineChart(Chart):
         return [dict(label='Test Line Chart', data=data)]
 
 
+class LineChartUnresponsive(LineChart):
+    responsive = False
+
+
 class BarChart(Chart):
     chart_type = 'radar'
     title = Title(text='Test Title')
@@ -266,7 +270,7 @@ class ChartViewTestCase(TestCase):
 class ChartTestCase(TestCase):
 
     def test_chart_dimension(self):
-        line_chart = LineChart(width=1000, height=500)
+        line_chart = LineChartUnresponsive(width=1000, height=500)
         self.assertEquals(line_chart.width, 1000)
         self.assertEquals(line_chart.height, 500)
 
@@ -296,3 +300,8 @@ class ChartTestCase(TestCase):
         js = line_chart.render_js()
 
         self.assertNotIn('<canvas', js)
+
+    def test_responsive_height_width(self):
+        LineChartUnresponsive(height=500)
+        self.assertRaises(ImproperlyConfigured,
+                          lambda: LineChart(height=500))

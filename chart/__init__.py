@@ -2,6 +2,7 @@ import json
 import uuid
 
 from django.template.loader import render_to_string
+from django.core.exceptions import ImproperlyConfigured
 
 
 class Chart(object):
@@ -13,6 +14,7 @@ class Chart(object):
     hover = None
     animation = None
     elements = None
+    responsive = None
 
     def __init__(self, height=None, width=None,
                  html_id=None, url_kwargs=None):
@@ -21,15 +23,27 @@ class Chart(object):
         self.width = width
         self.html_id = html_id or 'chart-{}'.format(uuid.uuid4())
 
+        if ((height is not None or width is not None) and
+                (self.responsive is None or self.responsive)):
+            raise ImproperlyConfigured(
+                'Using the height/width parameter will have no '
+                'effect if the chart is in responsive mode. '
+                'Disable responsive mode by setting chart.responsive '
+                'to False')
+
     def _get_options(self):
         option_keys = {'scales', 'layout', 'title', 'legend',
-                       'tooltips', 'hover', 'animation', 'elements'}
+                       'tooltips', 'hover', 'animation', 'elements',
+                       'responsive'}
 
         return {key: self._get_options_attr(key)
-                for key in option_keys if self._get_options_attr(key)}
+                for key in option_keys if self._has_options_attr(key)}
 
     def _get_options_attr(self, name):
         return getattr(self, name, False)
+
+    def _has_options_attr(self, name):
+        return getattr(self, name) is not None
 
     def _assert_chart_type(self):
         if not getattr(self, 'chart_type'):

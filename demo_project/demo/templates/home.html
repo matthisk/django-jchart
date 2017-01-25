@@ -1,78 +1,237 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Django-Charting - DEMO PAGE</title>
+{% extends "base.html" %}
 
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
-<body>
-<div class="container">
-    <div class="row">
-        <div class="col-md-2">
-            <nav class="hidden-print hidden-sm hidden-xs affix-top">
-                <ul class="nav nav-stacked">
-                    <li>
-                        <a href="#time-series">Time Series</a>
-                        <a href="#scatter-line-plot">Line Chart</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-
-        <div class="col-md-10">
-            <h3 id="time-series-chart">
-                <a href="#time-series-chart">
+{% block content %}
+            <h4 class="first section-title" id="time-series-chart">
+                <a class="fragment-link" href="#time-series-chart">
                     Time Series Chart
                 </a>
-            </h3>
+            </h4>
+            <p>
+                An example of a plot using time series data, where the X axis represents the time and the Y axis is any arbitrary value.
+            </p>
             {{ time_series_chart.as_html }}
 
-            <h3 id="scatter-line-chart">
-                <a href="#scatter-line-chart">
+            <p>Code used for this example:</p>
+            <pre>
+                <code class="language-python">
+class TimeSeriesChart(Chart):
+    chart_type = 'line'
+    scales = {
+        'xAxes': [Axes(type='time', position='bottom')],
+    }
+
+    def get_datasets(self, **kwargs):
+        data = [{'y': 0, 'x': '2017-01-02T00:00:00'}, {'y': 1, 'x': '2017-01-03T00:00:00'}, {'y': 4, 'x': '2017-01-04T00:00:00'}, {'y': 9, 'x': '2017-01-05T00:00:00'}, {'y': 16, 'x': '2017-01-06T00:00:00'}, {'y': 25, 'x': '2017-01-07T00:00:00'}, {'y': 36, 'x': '2017-01-08T00:00:00'}, {'y': 49, 'x': '2017-01-09T00:00:00'}, {'y': 64, 'x': '2017-01-10T00:00:00'}, {'y': 81, 'x': '2017-01-11T00:00:00'}, {'y': 100, 'x': '2017-01-12T00:00:00'}, {'y': 121, 'x': '2017-01-13T00:00:00'}, {'y': 144, 'x': '2017-01-14T00:00:00'}, {'y': 169, 'x': '2017-01-15T00:00:00'}, {'y': 196, 'x': '2017-01-16T00:00:00'}, {'y': 225, 'x': '2017-01-17T00:00:00'}, {'y': 256, 'x': '2017-01-18T00:00:00'}, {'y': 289, 'x': '2017-01-19T00:00:00'}, {'y': 324, 'x': '2017-01-20T00:00:00'}, {'y': 361, 'x': '2017-01-21T00:00:00'}, {'y': 400, 'x': '2017-01-22T00:00:00'}, {'y': 441, 'x': '2017-01-23T00:00:00'}, {'y': 484, 'x': '2017-01-24T00:00:00'}, {'y': 529, 'x': '2017-01-25T00:00:00'}, {'y': 576, 'x': '2017-01-26T00:00:00'}, {'y': 625, 'x': '2017-01-27T00:00:00'}, {'y': 676, 'x': '2017-01-28T00:00:00'}, {'y': 729, 'x': '2017-01-29T00:00:00'}, {'y': 784, 'x': '2017-01-30T00:00:00'}, {'y': 841, 'x': '2017-01-31T00:00:00'}, {'y': 900, 'x': '2017-02-01T00:00:00'}]
+
+        return [DataSet(
+            type='line',
+            label='Time Series',
+            data=data,
+        )]
+                </code>
+            </pre>
+
+            <h4 class="section-title" id="scatter-line-chart">
+                <a class="fragment-link" href="#scatter-line-chart">
                     Scatter &amp; Line Chart
                 </a>
-            </h3>
+            </h4>
+            <p>
+                An example of a scatter plot combined with a line chart. Such a plot could for instance be used to visualize the moving average of scattered data.
+            </p>
             {{ scatter_line_chart.as_html }}
+            <p>
+                Code:
+            </p>
+            <pre>
+                <code class="language-python">
+class ScatterLineChart(Chart):
+    chart_type = 'line'
+    scales = {
+        'xAxes': [Axes(type='time', position='bottom')],
+    }
 
-            <h3 id="bar-chart">
-                <a href="#bar-chart">
+    def get_datasets(self, **kwargs):
+        data_scatter = [{'y': 24, 'x': '2017-01-01T21:00:00'}, {'y': 1, 'x': '2017-01-02T03:00:00'}, {'y': 7, 'x': '2017-01-02T14:00:00'}, {'y': 7, 'x': '2017-01-03T08:00:00'}, {'y': 13, 'x': '2017-01-04T00:00:00'}, {'y': 7, 'x': '2017-01-04T07:00:00'}, {'y': 19, 'x': '2017-01-05T01:00:00'}, {'y': 18, 'x': '2017-01-05T15:00:00'}, {'y': 14, 'x': '2017-01-06T00:00:00'}, {'y': 2, 'x': '2017-01-06T07:00:00'}, {'y': 18, 'x': '2017-01-07T06:00:00'}, {'y': 4, 'x': '2017-01-07T07:00:00'}, {'y': 21, 'x': '2017-01-07T21:00:00'}, {'y': 5, 'x': '2017-01-08T00:00:00'}, {'y': 16, 'x': '2017-01-08T07:00:00'}, {'y': 14, 'x': '2017-01-08T11:00:00'}, {'y': 21, 'x': '2017-01-09T04:00:00'}, {'y': 25, 'x': '2017-01-09T20:00:00'}, {'y': 9, 'x': '2017-01-10T15:00:00'}, {'y': 25, 'x': '2017-01-11T10:00:00'}, {'y': 17, 'x': '2017-01-11T17:00:00'}, {'y': 10, 'x': '2017-01-12T11:00:00'}, {'y': 7, 'x': '2017-01-12T17:00:00'}, {'y': 11, 'x': '2017-01-12T22:00:00'}, {'y': 2, 'x': '2017-01-13T04:00:00'}, {'y': 13, 'x': '2017-01-13T12:00:00'}, {'y': 12, 'x': '2017-01-14T12:00:00'}, {'y': 16, 'x': '2017-01-15T10:00:00'}, {'y': 15, 'x': '2017-01-16T00:00:00'}, {'y': 23, 'x': '2017-01-16T17:00:00'}, {'y': 15, 'x': '2017-01-17T02:00:00'}, {'y': 22, 'x': '2017-01-17T12:00:00'}, {'y': 18, 'x': '2017-01-17T15:00:00'}, {'y': 16, 'x': '2017-01-18T14:00:00'}, {'y': 7, 'x': '2017-01-19T09:00:00'}, {'y': 10, 'x': '2017-01-20T02:00:00'}, {'y': 7, 'x': '2017-01-20T13:00:00'}, {'y': 5, 'x': '2017-01-20T17:00:00'}, {'y': 15, 'x': '2017-01-20T20:00:00'}, {'y': 5, 'x': '2017-01-21T06:00:00'}, {'y': 13, 'x': '2017-01-21T18:00:00'}, {'y': 20, 'x': '2017-01-22T13:00:00'}, {'y': 20, 'x': '2017-01-22T16:00:00'}, {'y': 23, 'x': '2017-01-23T15:00:00'}, {'y': 3, 'x': '2017-01-23T20:00:00'}, {'y': 20, 'x': '2017-01-24T15:00:00'}, {'y': 19, 'x': '2017-01-24T16:00:00'}, {'y': 1, 'x': '2017-01-25T00:00:00'}, {'y': 3, 'x': '2017-01-25T02:00:00'}, {'y': 22, 'x': '2017-01-25T23:00:00'}, {'y': 6, 'x': '2017-01-26T19:00:00'}, {'y': 17, 'x': '2017-01-27T10:00:00'}, {'y': 7, 'x': '2017-01-28T09:00:00'}, {'y': 23, 'x': '2017-01-29T05:00:00'}, {'y': 19, 'x': '2017-01-29T17:00:00'}, {'y': 16, 'x': '2017-01-30T08:00:00'}, {'y': 19, 'x': '2017-01-30T09:00:00'}, {'y': 23, 'x': '2017-01-31T06:00:00'}, {'y': 18, 'x': '2017-02-01T05:00:00'}]
+        data_line = [{'y': 20, 'x': '2017-01-02T00:00:00'}, {'y': 3, 'x': '2017-01-03T00:00:00'}, {'y': 2, 'x': '2017-01-04T00:00:00'}, {'y': 18, 'x': '2017-01-05T00:00:00'}, {'y': 19, 'x': '2017-01-06T00:00:00'}, {'y': 20, 'x': '2017-01-07T00:00:00'}, {'y': 5, 'x': '2017-01-08T00:00:00'}, {'y': 23, 'x': '2017-01-09T00:00:00'}, {'y': 18, 'x': '2017-01-10T00:00:00'}, {'y': 5, 'x': '2017-01-11T00:00:00'}, {'y': 6, 'x': '2017-01-12T00:00:00'}, {'y': 2, 'x': '2017-01-13T00:00:00'}, {'y': 23, 'x': '2017-01-14T00:00:00'}, {'y': 3, 'x': '2017-01-15T00:00:00'}, {'y': 24, 'x': '2017-01-16T00:00:00'}, {'y': 10, 'x': '2017-01-17T00:00:00'}, {'y': 9, 'x': '2017-01-18T00:00:00'}, {'y': 11, 'x': '2017-01-19T00:00:00'}, {'y': 10, 'x': '2017-01-20T00:00:00'}, {'y': 2, 'x': '2017-01-21T00:00:00'}, {'y': 16, 'x': '2017-01-22T00:00:00'}, {'y': 24, 'x': '2017-01-23T00:00:00'}, {'y': 3, 'x': '2017-01-24T00:00:00'}, {'y': 13, 'x': '2017-01-25T00:00:00'}, {'y': 7, 'x': '2017-01-26T00:00:00'}, {'y': 10, 'x': '2017-01-27T00:00:00'}, {'y': 7, 'x': '2017-01-28T00:00:00'}, {'y': 13, 'x': '2017-01-29T00:00:00'}, {'y': 1, 'x': '2017-01-30T00:00:00'}, {'y': 10, 'x': '2017-01-31T00:00:00'}, {'y': 7, 'x': '2017-02-01T00:00:00'}]
+
+        return [
+            DataSet(type='line',
+                    label='Scatter',
+                    showLine=False,
+                    data=data_scatter),
+            DataSet(type='line',
+                    label='Line',
+                    borderColor='red',
+                    data=data_line)
+        ]
+                </code>
+            </pre>
+            <h4 class="section-title" id="bar-chart">
+                <a class="fragment-link" href="#bar-chart">
                     Bar Chart
                 </a>
-            </h3>
+            </h4>
+            <p>
+                A bar chart using one dataset.
+            </p>
             {{ bar_chart.as_html }}
+            <p>
+                Code:
+            </p>
+            <pre>
+                <code class="language-python">
+class BarChart(Chart):
+    chart_type = 'bar'
 
-            <h3 id="radar-chart">
-                <a href="#radar-chart">
+    def get_labels(self, **kwargs):
+        return ["January", "February", "March", "April",
+                "May", "June", "July"]
+
+    def get_datasets(self, **kwargs):
+        data = [10, 15, 29, 30, 5, 10, 22]
+        colors = [
+            rgba(255, 99, 132, 0.2),
+            rgba(54, 162, 235, 0.2),
+            rgba(255, 206, 86, 0.2),
+            rgba(75, 192, 192, 0.2),
+            rgba(153, 102, 255, 0.2),
+            rgba(255, 159, 64, 0.2)
+        ]
+
+        return [DataSet(label='Bar Chart',
+                        data=data,
+                        borderWidth=1,
+                        backgroundColor=colors,
+                        borderColor=colors)]
+                </code>
+            </pre>
+            <h4 class="section-title" id="radar-chart">
+                <a class="fragment-link" href="#radar-chart">
                     Radar Chart
                 </a>
-            </h3>
+            </h4>
+            <p>
+                A line chart is a way of plotting data points on a line. Often, it is used to show trend data, and the comparison of two data sets.
+            </p>
             {{ radar_chart.as_html }}
+            <p>
+                Code:
+            </p>
+            <pre>
+                <code class="language-python">
+class RadarChart(Chart):
+    chart_type = 'radar'
 
-            <h3 id="polar-chart">
-                <a href="#polar-chart">
+    def get_labels(self):
+        return ["Eating", "Drinking", "Sleeping", "Designing", "Coding", "Cycling", "Running"]
+
+    def get_datasets(self, **kwargs):
+        return [DataSet(label="My First dataset",
+                        color=(179, 181, 198),
+                        data=[65, 59, 90, 81, 56, 55, 40]),
+                DataSet(label="My Second dataset",
+                        color=(255, 99, 132),
+                        data=[28, 48, 40, 19, 96, 27, 100])
+                ]
+                </code>
+            </pre>
+            <h4 class="section-title" id="polar-chart">
+                <a class="fragment-link" href="#polar-chart">
                     Polar Chart
                 </a>
-            </h3>
+            </h4>
+            <p>
+                A line chart is a way of plotting data points on a line. Often, it is used to show trend data, and the comparison of two data sets.
+            </p>
             {{ polar_chart.as_html }}
+            <p>
+                Code:
+            </p>
+            <pre>
+                <code class="language-python">
+class PolarChart(Chart):
+    chart_type = 'polarArea'
 
-            <h3 id="pie-chart">
-                <a href="#pie-chart">
+    def get_labels(self, **kwargs):
+        return ["Red", "Green", "Yellow", "Grey", "Blue"]
+
+    def get_datasets(self, **kwargs):
+        return [DataSet(label="My DataSet",
+                        data=[11, 16, 7, 3, 14],
+                        backgroundColor=[
+                            "#FF6384",
+                            "#4BC0C0",
+                            "#FFCE56",
+                            "#E7E9ED",
+                            "#36A2EB"
+                        ])
+                ]
+                </code>
+            </pre>
+            <h4 class="section-title" id="pie-chart">
+                <a class="fragment-link" href="#pie-chart">
                     Pie Chart
                 </a>
-            </h3>
+            </h4>
+            <p>
+                A line chart is a way of plotting data points on a line. Often, it is used to show trend data, and the comparison of two data sets.
+            </p>
             {{ pie_chart.as_html }}
+            <p>
+                Code:
+            </p>
 
-            <h3 id="bubble-chart">
-                <a href="#bubble-chart">
+            <pre>
+                <code class="language-python">
+class PieChart(Chart):
+    chart_type = 'pie'
+
+    def get_labels(self, **kwargs):
+        return ["Red", "Blue", "Yellow"]
+
+    def get_datasets(self, **kwargs):
+        data = [300, 50, 100]
+        colors = [
+            "#FF6384",
+            "#36A2EB",
+            "#FFCE56"
+        ]
+        return [DataSet(data=data,
+                        label="My Pie Data",
+                        backgroundColor=colors,
+                        hoverBackgroundColor=colors)]
+                </code>
+            </pre>
+
+            <h4 class="section-title" id="bubble-chart">
+                <a class="fragment-link" href="#bubble-chart">
                     Bubble Chart
                 </a>
-            </h3>
+            </h4>
+            <p>
+                A line chart is a way of plotting data points on a line. Often, it is used to show trend data, and the comparison of two data sets.
+            </p>
             {{ bubble_chart.as_html }}
-        </div>
-    </div>
-</div>
+            <p>
+                Code:
+            </p>
+            <pre>
+                <code class="language-python">
+class BubbleChart(Chart):
+    chart_type = 'bubble'
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
-</body>
-</html>
+    def get_datasets(self, **kwargs):
+        data = [{
+            'x': randint(1, 10),
+            'y': randint(1, 25),
+            'r': randint(1, 10),
+        } for i in range(25)]
+
+        return [DataSet(label="First DataSet",
+                        data=data,
+                        backgroundColor='#FF6384',
+                        hoverBackgroundColor='#FF6384')]
+                </code>
+            </pre>
+{% endblock %}

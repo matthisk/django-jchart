@@ -32,6 +32,10 @@ urlpatterns = [
         ChartView.from_chart(charts.PolarChart()),
         name='polar_plot'),
 
+    url(r'^charts/pie_plot/$',
+        ChartView.from_chart(charts.PieChart()),
+        name='pie_plot'),
+
     url(r'^charts/bubble_plot/$',
         ChartView.from_chart(charts.BubbleChart()),
         name='bubble_plot'),

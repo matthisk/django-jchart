@@ -1,41 +1,54 @@
+{% extends "base.html" %}
 {% load charting %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Django-Charting - Async Charts - DEMO PAGE</title>
+{% block content %}
+    <h4 class="first section-title" id="time-series-chart">
+        <a class="fragment-link" href="#time-series-chart">
+            Time Series Chart
+        </a>
+    </h4>
+    {% render_chart 'time_series_plot' %}
 
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
-<body>
-<div class="container">
-    <div class="row">
-        <div class="col-md-2">
-            <nav class="hidden-print hidden-sm hidden-xs affix-top">
-                <ul class="nav nav-stacked">
-                    <li>
-                    </li>
-                </ul>
-            </nav>
-        </div>
+    <h4 class="section-title" id="scatter-line-chart">
+        <a class="fragment-link" href="#scatter-line-chart">
+            Scatter &amp; Line Chart
+        </a>
+    </h4>    
+    {% render_chart 'scatter_line_plot' %}
 
-        <div class="col-md-10">
-            {% render_chart 'scatter_line_plot' %}
+    <h4 class="section-title" id="bar-chart">
+        <a class="fragment-link" href="#bar-chart">
+            Bar Chart
+        </a>
+    </h4>
+    {% render_chart 'bar_plot' %}
 
-            {% render_chart 'time_series_plot' %}
+    <h4 class="section-title" id="radar-chart">
+        <a class="fragment-link" href="#radar-chart">
+            Radar Chart
+        </a>
+    </h4>
+    {% render_chart 'radar_plot' %}
 
-            {% render_chart 'bar_plot' %}
+    <h4 class="section-title" id="polar-chart">
+        <a class="fragment-link" href="#polar-chart">
+            Polar Chart
+        </a>
+    </h4>
+    {% render_chart 'polar_plot' %}
 
-            {% render_chart 'radar_plot' %}
 
-            {% render_chart 'polar_plot' %}
+    <h4 class="section-title" id="pie-chart">
+        <a class="fragment-link" href="#pie-chart">
+            Pie Chart
+        </a>
+    </h4>
+    {% render_chart 'pie_plot' %}
 
-            {% render_chart 'bubble_plot' %}
-        </div>
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
-</body>
-</html>
+    <h4 class="section-title" id="bubble-chart">
+        <a class="fragment-link" href="#bubble-chart">
+            Bubble Chart
+        </a>
+    </h4>
+    {% render_chart 'bubble_plot' %}
+{% endblock %}
