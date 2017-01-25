@@ -21,6 +21,7 @@ matrix:
       env: DJANGO="django==1.5.12"
 install:
   - travis_retry pip install pep8==1.7.0
+  - travis_retry pip install selenium
   - travis_retry pip install $DJANGO
 script:
   - cd demo_project && python manage.py test
