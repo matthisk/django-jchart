@@ -1,0 +1,4 @@
+Django==1.10.5
+gunicorn==19.6.0
+selenium==3.0.2
+wheel==0.24.0
