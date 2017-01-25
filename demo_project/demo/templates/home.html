@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Django-Charting - DEMO PAGE</title>
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <nav class="hidden-print hidden-sm hidden-xs affix-top">
+                <ul class="nav nav-stacked">
+                    <li>
+                        <a href="#time-series">Time Series</a>
+                        <a href="#scatter-line-plot">Line Chart</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col-md-10">
+            {{ time_series_chart.as_html }}
+
+            {{ time_series_chart.as_html }}
+
+            {{ scatter_line_chart.as_html }}
+
+            {{ bar_chart.as_html }}
+
+            {{ radar_chart.as_html }}
+
+            {{ polar_chart.as_html }}
+
+            {{ pie_chart.as_html }}
+
+            {{ bubble_chart.as_html }}
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+</body>
+</html>

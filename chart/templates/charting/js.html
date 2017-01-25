@@ -1,0 +1,7 @@
+<script type="text/javascript">
+window.addEventListener("DOMContentLoaded", function() {
+    var ctx = document.getElementById("{{ chart.html_id }}").getContext("2d");
+
+    new Chart(ctx, {{ chart.configuration|safe }});
+});
+</script>

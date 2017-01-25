@@ -47,7 +47,16 @@ def DataSet(**kwargs):
                     'pointBackgroundColor', 'pointBorderWidth', 'pointRadius',
                     'pointHoverRadius', 'pointHitRadius', 'pointHoverBackgroundColor',
                     'pointHoverBorderColor', 'pointHoverBorderWidth', 'pointStyle',
-                    'showLine', 'spanGaps', 'steppedLine', 'color'}
+                    'showLine', 'spanGaps', 'steppedLine', 'color',
+                    'data', 'label', 'fill', 'lineTension', 'backgroundColor',
+                    'borderWidth', 'borderColor', 'borderCapStyle', 'borderDash',
+                    'borderDashOffset', 'borderJoinStyle', 'pointBorderColor',
+                    'pointBackgroundColor', 'pointBorderWidth', 'pointRadius',
+                    'pointHoverRadius', 'hitRadius', 'pointHoverBackgroundColor',
+                    'pointHoverBorderColor', 'pointHoverBorderWidth', 'pointStyle',
+                    'data', 'label', 'backgroundColor', 'borderColor', 'borderWidth',
+                    'hoverBackgroundColor', 'hoverBorderColor', 'hoverBorderWidth',
+                    'hoverRadius'}
 
     assert_keys('DataSet', allowed_keys, kwargs)
 
@@ -170,7 +179,7 @@ def ElementPoint(**kwargs):
     return dict(**kwargs)
 
 
-def ElementRectangle(**kawrgs):
+def ElementRectangle(**kwargs):
     allowed_keys = {'backgroundColor', 'borderWidth', 'borderColor', 'borderSkipped'}
 
     assert_keys('ElementRectangle', allowed_keys, kwargs)

@@ -30,3 +30,8 @@ INSTALLED_APPS = (
 ### Documentation
 
 ...
+
+
+### Example Project
+
+...

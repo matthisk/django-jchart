@@ -1,0 +1,41 @@
+{% load charting %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Django-Charting - Async Charts - DEMO PAGE</title>
+
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <nav class="hidden-print hidden-sm hidden-xs affix-top">
+                <ul class="nav nav-stacked">
+                    <li>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <div class="col-md-10">
+            {% render_chart 'scatter_line_plot' %}
+
+            {% render_chart 'time_series_plot' %}
+
+            {% render_chart 'bar_plot' %}
+
+            {% render_chart 'radar_plot' %}
+
+            {% render_chart 'polar_plot' %}
+
+            {% render_chart 'bubble_plot' %}
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<script type="text/javascript">
+window.addEventListener("DOMContentLoaded", function() {
+    $.get('{{ url }}', function(configuration) {
+        var ctx = document.getElementById("{{ html_id }}").getContext("2d");    
+
+        new Chart(ctx, configuration);
+    });
+});
+</script>

@@ -1,69 +1,48 @@
 from django.views.generic import View
+from django.utils.decorators import classonlymethod
+from django.core.exceptions import ImproperlyConfigured
 
 from .mixins import JSONResponseMixin
+from .. import Chart
 
-from ..config import Axes
+
+def chart_subclass_factory(chart, *args, **kwargs):
+    SubClass = type('ChartSubClass', (ChartView, ), {
+            'chart_instance': chart
+        })
+
+    return SubClass.as_view()
 
 
-class BaseChart(View, JSONResponseMixin):
-    scales = None
-    layout = None
-    title = None
-    legend = None
-    tooltips = None
-    hover = None
-    animation = None
-    elements = None
+def assert_chart_instance(chart_instance):
+    if (chart_instance is None or
+            not isinstance(chart_instance, Chart)):
+        raise ImproperlyConfigured(
+            'Do not subclass ChartView '
+            'without overriding property `chart_instance` '
+            'with a valid Chart subclass')
 
-    def _get_options(self):
-        option_keys = {'scales', 'layout', 'title', 'legend',
-                       'tooltips', 'hover', 'animation', 'elements'}
 
-        return {key: self._get_options_attr(key)
-                for key in option_keys if self._get_options_attr(key)}
+class ChartView(View, JSONResponseMixin):
+    '''
+    Use this View to serve Chart.js configuration asynchronously.
+    This view can be used in cooperation with the {% render_chart %}
+    template tag.
+    '''
+    chart_instance = None
 
-    def _get_options_attr(self, name):
-        return getattr(self, name, False)
+    def __init__(self, *args, **kwargs):
+        assert_chart_instance(self.chart_instance)
+        super(ChartView, self).__init__(*args, **kwargs)
 
-    def _assert_chart_type(self):
-        if not getattr(self, 'chart_type'):
-            raise ValueError(
-                'You should add property `chart_type` to your BaseChart instance.'
-                'Which is one of `line` `bar` `radar` `polarArea` `pie` `bubble`'
-                'or one a custom chart type.')
+    @classonlymethod
+    def from_chart(cls, chart, *args, **kwargs):
+        assert_chart_instance(chart)
+        return chart_subclass_factory(chart, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         """
         Main entry. This View only responds to GET requests.
         """
-        context = self.get_chartjs_context(**kwargs)
+        context = self.chart_instance.chartjs_configuration(**kwargs)
         return self.render_json_response(context)
-
-    def get_chartjs_context(self, **kwargs):
-        self._assert_chart_type()
-
-        data = {}
-        data['type'] = self.chart_type
-        data['options'] = self._get_options()
-        data['data'] = {
-            'labels': self.get_labels(),
-            'datasets': self.get_datasets(**kwargs),
-        }
-
-        return data
-
-    def get_labels(self):
-        return []
-
-    def get_datasets(self, **kwargs):
-        raise NotImplementedError(
-            'You should return a list of DataSet dictionaries'
-            '(i.e.: [DataSet(**keys), ...]'
-            )
-
-
-class TimeChart(BaseChart):
-    chart_type = 'line'
-    scales = {
-        'xAxes': [Axes(type='time', position='bottom')],
-    }

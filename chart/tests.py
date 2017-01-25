@@ -2,14 +2,16 @@ import json
 
 from django.test import TestCase, RequestFactory
 from django.utils import six
+from django.core.exceptions import ImproperlyConfigured
 
-from .views import BaseChart
+from .views import ChartView
+from . import Chart
 from .config import (Title, Legend, Tooltips, Hover,
                      InteractionModes, Animation, Element,
                      ElementArc, Axes, ScaleLabel, Tick, rgba)
 
 
-class LineChart(BaseChart):
+class LineChart(Chart):
     chart_type = 'line'
     title = Title(text='Test Title Line')
     legend = Legend(display=False)
@@ -25,57 +27,57 @@ class LineChart(BaseChart):
                        )],
     }
 
-    def get_datasets(self):
+    def get_datasets(self, **kwargs):
         data = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         return [dict(label='Test Line Chart', data=data)]
 
 
-class BarChart(BaseChart):
+class BarChart(Chart):
     chart_type = 'radar'
     title = Title(text='Test Title')
 
-    def get_datasets(self):
+    def get_datasets(self, **kwargs):
         data = []
         return [dict(label='Test Radar Chart', data=data)]
 
 
-class PolarChart(BaseChart):
+class PolarChart(Chart):
     chart_type = 'polarArea'
     title = Title(text='Test Title')
 
-    def get_datasets(self):
+    def get_datasets(self, **kwargs):
         data = []
         return [dict(label='Test Polar Chart', data=data)]
 
 
-class RadarChart(BaseChart):
+class RadarChart(Chart):
     chart_type = 'bar'
     title = Title(text='Test Title')
 
-    def get_datasets(self):
+    def get_datasets(self, **kwargs):
         data = []
         return [dict(label='Test Line Chart', data=data)]
 
 
-class PieChart(BaseChart):
+class PieChart(Chart):
     chart_type = 'pie'
     title = Title(text='Test Title')
 
-    def get_datasets(self):
+    def get_datasets(self, **kwargs):
         data = []
         return [dict(label='Test Pie Chart', data=data)]
 
 
-class BubbleChart(BaseChart):
+class BubbleChart(Chart):
     chart_type = 'bubble'
     title = Title(text='Test Title')
 
-    def get_datasets(self):
+    def get_datasets(self, **kwargs):
         data = []
         return [dict(label='Test Bubble Chart', data=data)]
 
 
-class ResponseTestToolkit(TestCase):
+class ChartViewTestToolkit(TestCase):
     classes = None
 
     @property
@@ -86,14 +88,15 @@ class ResponseTestToolkit(TestCase):
     @property
     def responses(self):
         for klass in self.classes:
-            yield klass.as_view()(self.request)
+            yield ChartView.from_chart(klass())(self.request)
 
 
-class ResponseTestToolkitSolo(ResponseTestToolkit):
+class ChartViewTestToolkitSolo(ChartViewTestToolkit):
     klass = None
 
     @property
     def response(self):
+        return ChartView.from_chart(self.klass())(self.request)
         return self.klass.as_view()(self.request)
 
     @property
@@ -103,7 +106,7 @@ class ResponseTestToolkitSolo(ResponseTestToolkit):
         return json.loads(data)
 
 
-class BaseChartTestCase(ResponseTestToolkit):
+class ChartResponseTestCase(ChartViewTestToolkit):
     classes = (
         LineChart,
         BarChart,
@@ -137,7 +140,7 @@ class BaseChartTestCase(ResponseTestToolkit):
             self.assertIn('title', data['options'])
 
 
-class LineChartTestCase(ResponseTestToolkitSolo):
+class LineChartTestCase(ChartViewTestToolkitSolo):
     klass = LineChart
 
     def test_title(self):
@@ -211,3 +214,85 @@ class TestConfigADTS(TestCase):
                     )
         self.assertTrue(isinstance(axes, dict))
         self.assertRaises(ValueError, lambda: Axes(nonsense='something'))
+
+
+class ChartViewTestCase(TestCase):
+
+    def test_chart_view(self):
+        self.assertTrue(getattr(ChartView, 'from_chart', False))
+        self.assertRaises(ImproperlyConfigured,
+                          lambda: ChartView())
+
+    def test_chart_view_from_chart_classonly(self):
+        ChartViewSubClass = type('ChartViewSubClass', (ChartView, ), {
+                'chart_instance': LineChart()
+            })
+        chart_view = ChartViewSubClass()
+        self.assertRaises(AttributeError,
+                          lambda: chart_view.from_chart(LineChart()))
+
+    def test_chart_view_from_chart(self):
+        self.assertRaises(ImproperlyConfigured,
+                          lambda: ChartView.from_chart(dict()))
+        self.assertRaises(ImproperlyConfigured,
+                          lambda: ChartView.from_chart(LineChart))
+        ChartView.from_chart(LineChart())
+
+    def test_chart_view_get(self):
+        ChartViewSubClass = type('ChartViewSubClass', (ChartView, ), {
+                'chart_instance': LineChart()
+            })
+        chart_view = ChartViewSubClass()
+
+        request_factory = RequestFactory()
+        request = request_factory.get('/test-url')
+        response = chart_view.get(request)
+
+        self.assertEquals(response.status_code, 200)
+        data = json.loads(response.content)
+
+        self.assertIn('data', data)
+        self.assertIn('options', data)
+        self.assertIn('type', data)
+
+        self.assertTrue(isinstance(data['data'], dict))
+        self.assertTrue(isinstance(data['options'], dict))
+        self.assertTrue(isinstance(data['type'], (six.string_types, six.text_type)))
+
+        self.assertIn(data['type'], ['bar', 'line', 'radar', 'polarArea', 'pie', 'bubble'])
+        self.assertIn('title', data['options'])
+
+
+class ChartTestCase(TestCase):
+
+    def test_chart_dimension(self):
+        line_chart = LineChart(width=1000, height=500)
+        self.assertEquals(line_chart.width, 1000)
+        self.assertEquals(line_chart.height, 500)
+
+        self.assertIn('height="500"', line_chart.as_html())
+        self.assertIn('width="1000"', line_chart.as_html())
+
+    def test_chart_no_dimension(self):
+        line_chart = LineChart()
+        self.assertEquals(line_chart.width, None)
+        self.assertEquals(line_chart.height, None)
+
+        self.assertNotIn('height="', line_chart.as_html())
+        self.assertNotIn('width="', line_chart.as_html())
+
+    def test_chart_html_id(self):
+        line_chart = LineChart(html_id='test-id')
+        self.assertIn('id="test-id"', line_chart.as_html())
+
+    def test_chart_render_html(self):
+        line_chart = LineChart()
+        html = line_chart.render_html()
+
+        self.assertNotIn('<script', html)
+
+    def test_chart_render_js(self):
+        line_chart = LineChart()
+        js = line_chart.render_js()
+
+        self.assertNotIn('<canvas', js)
