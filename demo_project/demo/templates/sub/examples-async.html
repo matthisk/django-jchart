@@ -1,0 +1,64 @@
+{% load charting %}
+
+<h3 class="section-title" id="examples-async">
+    <a class="fragment-link" href="#time-series-chart">
+        Example Charts Async
+    </a>
+</h3>
+
+<h4 class="first section-title" id="async-time-series-chart">
+    <a class="fragment-link" href="#time-async-series-chart">
+        Time Series Chart
+    </a>
+</h4>
+{% render_chart 'time_series_chart' %}
+{% include "code-examples/time_series_chart.html" with async=True %}
+
+<h4 class="section-title" id="async-scatter-line-chart">
+    <a class="fragment-link" href="#async-scatter-line-chart">
+        Scatter &amp; Line Chart
+    </a>
+</h4>    
+{% render_chart 'scatter_line_chart' %}
+{% include "code-examples/scatter_line_chart.html" with async=True %}
+
+<h4 class="section-title" id="async-bar-chart">
+    <a class="fragment-link" href="#async-bar-chart">
+        Bar Chart
+    </a>
+</h4>
+{% render_chart 'bar_chart' %}
+{% include "code-examples/bar_chart.html" with async=True %}
+
+<h4 class="section-title" id="async-radar-chart">
+    <a class="fragment-link" href="#async-radar-chart">
+        Radar Chart
+    </a>
+</h4>
+{% render_chart 'radar_chart' %}
+{% include "code-examples/radar_chart.html" with async=True %}
+
+<h4 class="section-title" id="async-polar-chart">
+    <a class="fragment-link" href="#async-polar-chart">
+        Polar Chart
+    </a>
+</h4>
+{% render_chart 'polar_chart' %}
+{% include "code-examples/polar_chart.html" with async=True %}
+
+
+<h4 class="section-title" id="async-pie-chart">
+    <a class="fragment-link" href="#async-pie-chart">
+        Pie Chart
+    </a>
+</h4>
+{% render_chart 'pie_chart' %}
+{% include "code-examples/pie_chart.html" with async=True %}
+
+<h4 class="section-title" id="async-bubble-chart">
+    <a class="fragment-link" href="#async-bubble-chart">
+        Bubble Chart
+    </a>
+</h4>
+{% render_chart 'bubble_chart' %}
+{% include "code-examples/bubble_chart.html" with async=True %}

@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -5,6 +7,9 @@
 
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/themes/prism.min.css">
+
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon" />
+
     <style type="text/css">
         body {
             position: relative;
@@ -14,41 +19,17 @@
             margin: 1em 0;
         }
 
+        h4, h5 {
+            margin-top: 1.5em;
+        }
+
         .nav-title {
             padding-right: 17px;
             text-align: right;
         }
 
-        nav ul a {
-            color: black;
-            text-align: right;
-            border-right: 2px solid rgba(255, 255, 255, 0);
-        }
-
-        nav li.active > a {
-            border-right: 2px solid rgb(255, 99, 132);
-        }
-
-        nav li > a:hover {
-            color: rgba(255, 99, 132, 1.0);
-        }
-
-        nav li.active > a {
-            color: rgba(255, 99, 132, 1.0);
-            background: #eee;
-        }
-
-        .nav > li > a {
-            padding: 4px 15px;
-            font-size: 13px;
-        }
-
         canvas {
             margin-bottom: 20px;
-        }
-
-        .section-title {
-            margin: 40px 0 20px 0;
         }
 
         .section-title.first {
@@ -78,6 +59,60 @@
             position: absolute;
             left: -1.4rem;
         }
+
+
+        /* sidebar */
+        .bs-docs-sidebar {
+            text-align: right;
+        }
+
+        /* all links */
+        .bs-docs-sidebar .nav>li>a {
+            font-size: 14px;
+            font-weight: 500;
+            color: black;
+            border-right: 2px solid rgba(255, 255, 255, 0);
+        }
+
+        /* nested links */
+        .bs-docs-sidebar .nav .nav>li>a {
+            font-size: 12px;
+            font-weight: 400;
+            padding: 4px 15px 4px 0;
+            font-size: 13px;
+        }
+
+        /* active & hover links */
+        .bs-docs-sidebar .nav>.active>a, 
+        .bs-docs-sidebar .nav>li>a:hover, 
+        .bs-docs-sidebar .nav>li>a:focus {
+            background-color: transparent;
+            color: rgba(255, 99, 132, 1.0);
+        }
+        /* all active links */
+        .bs-docs-sidebar .nav>.active>a, 
+        .bs-docs-sidebar .nav>.active:hover>a,
+        .bs-docs-sidebar .nav>.active:focus>a {
+            font-weight: 700;
+            color: rgba(255, 99, 132, 1.0);
+            border-right: 2px solid rgb(255, 99, 132);
+        }
+        /* nested active links */
+        .bs-docs-sidebar .nav .nav>.active>a, 
+        .bs-docs-sidebar .nav .nav>.active:hover>a,
+        .bs-docs-sidebar .nav .nav>.active:focus>a {
+            font-weight: 500;
+        }
+
+        /* hide inactive nested list */
+        .bs-docs-sidebar .nav ul.nav {
+            display: none;           
+        }
+        /* show active nested list */
+        .bs-docs-sidebar .nav>.active>ul.nav {
+            display: block;           
+        }
+
     </style>
 </head>
 <body data-spy="scroll" data-target="#sidebar">
@@ -85,48 +120,7 @@
     <div class="row">
         <div class="col-md-2" >
             <div data-spy="affix" class="hidden-print hidden-sm hidden-xs">    
-                <h4 class="nav-title">Navigation</h4>
-                
-                <nav role="tablist">
-                    <ul class="nav nav-stacked">
-                        <li {% if url_name == 'home' %}class="active"{% endif %}>
-                            <a href="/">Normal charts</a>
-                        </li>
-                        <li {% if url_name == 'home_async' %}class="active"{% endif %}>
-                            <a href="/async">Async loaded charts</a>
-                        </li>
-                    </ul>
-                </nav>
-
-                <br/>
-
-                <h4 class="nav-title">Example Charts</h4>
-
-                <nav id="sidebar" role="tablist">
-                    <ul class="nav nav-stacked">
-                        <li>
-                            <a href="#time-series-chart">Time Series</a>
-                        </li>
-                        <li>
-                            <a href="#scatter-line-chart">Scatter &amp; Line Chart</a>
-                        </li>
-                        <li>
-                            <a href="#bar-chart">Bar Chart</a>
-                        </li>
-                        <li>
-                            <a href="#radar-chart">Radar Chart</a>
-                        </li>
-                        <li>
-                            <a href="#polar-chart">Polar Chart</a>
-                        </li>
-                        <li>
-                            <a href="#pie-chart">Pie Chart</a>
-                        </li>
-                        <li>
-                            <a href="#bubble-chart">Bubble Chart</a>
-                        </li>
-                    </ul>
-                </nav>
+                {% include "sub/nav.html" %}
             </div>
         </div>
 
