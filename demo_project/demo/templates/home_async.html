@@ -7,35 +7,40 @@
             Time Series Chart
         </a>
     </h4>
-    {% render_chart 'time_series_plot' %}
-
+    {% render_chart 'time_series_chart' %}
+    {% include "code-examples/time_series_chart.html" with async=True %}
+    
     <h4 class="section-title" id="scatter-line-chart">
         <a class="fragment-link" href="#scatter-line-chart">
             Scatter &amp; Line Chart
         </a>
     </h4>    
-    {% render_chart 'scatter_line_plot' %}
+    {% render_chart 'scatter_line_chart' %}
+    {% include "code-examples/scatter_line_chart.html" with async=True %}
 
     <h4 class="section-title" id="bar-chart">
         <a class="fragment-link" href="#bar-chart">
             Bar Chart
         </a>
     </h4>
-    {% render_chart 'bar_plot' %}
+    {% render_chart 'bar_chart' %}
+    {% include "code-examples/bar_chart.html" with async=True %}
 
     <h4 class="section-title" id="radar-chart">
         <a class="fragment-link" href="#radar-chart">
             Radar Chart
         </a>
     </h4>
-    {% render_chart 'radar_plot' %}
+    {% render_chart 'radar_chart' %}
+    {% include "code-examples/radar_chart.html" with async=True %}
 
     <h4 class="section-title" id="polar-chart">
         <a class="fragment-link" href="#polar-chart">
             Polar Chart
         </a>
     </h4>
-    {% render_chart 'polar_plot' %}
+    {% render_chart 'polar_chart' %}
+    {% include "code-examples/polar_chart.html" with async=True %}
 
 
     <h4 class="section-title" id="pie-chart">
@@ -43,12 +48,15 @@
             Pie Chart
         </a>
     </h4>
-    {% render_chart 'pie_plot' %}
+    {% render_chart 'pie_chart' %}
+    {% include "code-examples/pie_chart.html" with async=True %}
 
     <h4 class="section-title" id="bubble-chart">
         <a class="fragment-link" href="#bubble-chart">
             Bubble Chart
         </a>
     </h4>
-    {% render_chart 'bubble_plot' %}
+    {% render_chart 'bubble_chart' %}
+    {% include "code-examples/bubble_chart.html" with async=True %}
+    
 {% endblock %}

@@ -12,31 +12,31 @@ urlpatterns = [
     url(r'^async/$', views.home_async, name='home_async'),
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^charts/scatter_line_plot/$',
+    url(r'^charts/scatter_line_chart/$',
         ChartView.from_chart(charts.ScatterLineChart()),
-        name='scatter_line_plot'),
+        name='scatter_line_chart'),
 
-    url(r'^charts/time_series_plot/$',
+    url(r'^charts/time_series_chart/$',
         ChartView.from_chart(charts.TimeSeriesChart()),
-        name='time_series_plot'),
+        name='time_series_chart'),
 
-    url(r'^charts/bar_plot/$',
+    url(r'^charts/bar_chart/$',
         ChartView.from_chart(charts.BarChart()),
-        name='bar_plot'),
+        name='bar_chart'),
 
-    url(r'^charts/radar_plot/$',
+    url(r'^charts/radar_chart/$',
         ChartView.from_chart(charts.RadarChart()),
-        name='radar_plot'),
+        name='radar_chart'),
 
-    url(r'^charts/polar_plot/$',
+    url(r'^charts/polar_chart/$',
         ChartView.from_chart(charts.PolarChart()),
-        name='polar_plot'),
+        name='polar_chart'),
 
-    url(r'^charts/pie_plot/$',
+    url(r'^charts/pie_chart/$',
         ChartView.from_chart(charts.PieChart()),
-        name='pie_plot'),
+        name='pie_chart'),
 
-    url(r'^charts/bubble_plot/$',
+    url(r'^charts/bubble_chart/$',
         ChartView.from_chart(charts.BubbleChart()),
-        name='bubble_plot'),
+        name='bubble_chart'),
 ]

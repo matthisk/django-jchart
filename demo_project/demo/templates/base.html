@@ -10,6 +10,10 @@
             position: relative;
         }
 
+        p {
+            margin: 1em 0;
+        }
+
         .nav-title {
             padding-right: 17px;
             text-align: right;
@@ -27,6 +31,16 @@
 
         nav li > a:hover {
             color: rgba(255, 99, 132, 1.0);
+        }
+
+        nav li.active > a {
+            color: rgba(255, 99, 132, 1.0);
+            background: #eee;
+        }
+
+        .nav > li > a {
+            padding: 4px 15px;
+            font-size: 13px;
         }
 
         canvas {
@@ -71,18 +85,20 @@
     <div class="row">
         <div class="col-md-2" >
             <div data-spy="affix" class="hidden-print hidden-sm hidden-xs">    
-            <h4 class="nav-title">Other Examples</h4>
-
+                <h4 class="nav-title">Navigation</h4>
+                
                 <nav role="tablist">
                     <ul class="nav nav-stacked">
-                        <li class="hover">
-                            <a href="/">Normal Charts</a>
+                        <li {% if url_name == 'home' %}class="active"{% endif %}>
+                            <a href="/">Normal charts</a>
                         </li>
-                        <li>
-                            <a href="/async">Async Charts</a>
+                        <li {% if url_name == 'home_async' %}class="active"{% endif %}>
+                            <a href="/async">Async loaded charts</a>
                         </li>
                     </ul>
                 </nav>
+
+                <br/>
 
                 <h4 class="nav-title">Example Charts</h4>
 

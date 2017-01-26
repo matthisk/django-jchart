@@ -24,7 +24,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = ['django-charting.es6console.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'django-charting.es6console.com']
 
 
 # Application definition
@@ -95,6 +95,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'demo.context_processors.url_name',
             ],
         },
     },
