@@ -30,4 +30,4 @@ after_script:
   # ensure we validate against pep standards
   - "pep8 --exclude=migrations --ignore=E501,E225,W293,E126,E123,E121 jchart"
 after_success:
-  - coveralls
+  - cd demo_project && coveralls
