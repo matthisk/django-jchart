@@ -105,7 +105,7 @@ class ChartViewTestToolkitSolo(ChartViewTestToolkit):
 
     @property
     def data(self):
-        charset = self.response.charset
+        charset = getattr(self.response, 'charset', 'utf-8')
         data = self.response.content.decode(charset)
         return json.loads(data)
 
@@ -130,7 +130,8 @@ class ChartResponseTestCase(ChartViewTestToolkit):
 
     def test_chart_config(self):
         for response in self.responses:
-            content = response.content.decode(response.charset)
+            charset = getattr(response, 'charset', 'utf-8')
+            content = response.content.decode(charset)
             data = json.loads(content)
             self.assertIn('data', data)
             self.assertIn('options', data)
