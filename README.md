@@ -1,6 +1,6 @@
 # django-chart
 
-[![Build Status](https://travis-ci.org/matthisk/django-jchart.svg?branch=master)](https://travis-ci.org/matthisk/django-jchart)
+[![Build Status](https://travis-ci.org/matthisk/django-chart.svg?branch=master)](https://travis-ci.org/matthisk/django-chart)
 
 This Django app enables you to configure and render <a href="http://www.chartjs.org/">Chart.JS</a> charts directly from your Django codebase. Charts can than either be rendered directly into your Django template or served asynchronously to the webbrowser.
 
