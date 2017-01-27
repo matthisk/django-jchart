@@ -9,7 +9,6 @@ admin.autodiscover()
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
-    url(r'^async/$', views.home_async, name='home_async'),
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^charts/scatter_line_chart/$',

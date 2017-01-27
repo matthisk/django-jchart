@@ -14,7 +14,3 @@ def home(request):
         'bubble_chart': charts.BubbleChart(),
     }
     return render(request, 'home.html', context)
-
-
-def home_async(request):
-    return render(request, 'home_async.html')
