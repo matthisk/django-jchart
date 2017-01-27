@@ -255,7 +255,7 @@ class ChartViewTestCase(TestCase):
 
         self.assertEquals(response.status_code, 200)
         charset = getattr(response, 'charset', 'utf-8')
-        content = response.content.encode(charset)
+        content = response.content.decode(charset)
         data = json.loads(content)
 
         self.assertIn('data', data)
