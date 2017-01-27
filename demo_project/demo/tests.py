@@ -2,7 +2,6 @@ import os
 
 from django.test import TestCase, Client
 
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 
@@ -19,6 +18,8 @@ class HomePageTestCase(TestCase):
         self.assertContains(response, 'new Chart(ctx, configuration', count=8)
 
 if not os.environ.get('CI', False):
+    from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+
     class SeleniumTests(StaticLiveServerTestCase):
 
         @classmethod
