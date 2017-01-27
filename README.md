@@ -1,34 +1,36 @@
 # django-chart
 
-[![Build Status](https://travis-ci.org/matthisk/django-chart.svg?branch=master)](https://travis-ci.org/matthisk/django-chart)
+[![Build Status](https://travis-ci.org/matthisk/django-jchart.svg?branch=master)](https://travis-ci.org/matthisk/django-jchart)
 
-A Django App to plot charts using the excellent Chart.JS library.
-This library enables you to create any Chart.JS chart using Django class based views. The configuration data for the chart is generated as a JSON http repsonse which can be loaded directly in to the Chart.JS library.
+This Django app enables you to configure and render <a href="http://www.chartjs.org/">Chart.JS</a> charts directly from your Django codebase. Charts can than either be rendered directly into your Django template or served asynchronously to the webbrowser.
 
 - Authors: Matthisk Heimensen
 - Licence: BSD
 - Compatibility: Django 1.5+, python2.7 up to python3.3
-- Project URL: https://github.com/matthisk/django-chart
+- Project URL: https://github.com/matthisk/django-jchart
 
 ### Getting Started
 
-install ``django-chart``
+install ``django-jchart``
 
 ```
-pip install django-chart
+pip install django-jchart
 ```
 
-Add ``django-chart`` to your installed apps.
+Add ``django-jchart`` to your installed apps.
 
 ```
 INSTALLED_APPS = (
     '...',
-    'chart',
+    'jchart',
 )
 ```
 
-### Documentation
+### (Code) Examples
 
+The [main webpage](http://django-jchart.matthisk.nl/) for this repository contains examples for all different chart types. 
+
+### Documentation
 
 <h4 class="section-title" id="docs-frontend-deps">
     <a class="fragment-link" href="#docs-frontend-deps">
@@ -39,7 +41,7 @@ INSTALLED_APPS = (
 <p>
 For the charts to be rendered inside the browser you will
 need to include the Chart.JS library. Add the following
-HTML before your closing &lt;/body&gt; tag: 
+HTML before your closing <code>&lt;/body&gt;</code> tag: 
 </p>
 
 <pre><code class="language-html">&lt;script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"&gt;&lt;/script&gt;</code></pre>
@@ -58,14 +60,14 @@ you will also need to include jQuery:
 </h4>
 
 <p>
-    At the heart of this charting library lies the <code>Chart</code> class. This class describes a chart, and defines which data it should display. The chart's class fields map to <a href="http://www.chartjs.org/docs/#chart-configuration">Chart.JS options</a> which describe how the chart should render and behave. There is a method that should be implemented in the chart class that defines which datasets are to be displayed, this method should be called <code>get_datasets</code>.
+    At the heart of this charting library lies the <code>Chart</code> class. This class describes a chart, and defines which data it should display. The chart's class fields map to <a href="http://www.chartjs.org/docs/#chart-configuration">Chart.JS options</a> which describe how the chart should render and behave. There is a method that should be implemented in the chart class that defines which datasets are to be plotted, this method should be called <code>get_datasets</code>.
 </p>
 
 <p>
-    To define which type of chart you want to render (e.g. a line or bar chart), your chart class should set it's class field `chart_type` to one of "line", "bar", "radar", "polarArea", "pie", or "bubble". A chart class without this field is invalid and initialization will result in a `ImproperlyConfigured` exception.
+    To define which type of chart you want to render (e.g. a line or bar chart), your chart class should set it's class field <code>chart_type</code> to one of "line", "bar", "radar", "polarArea", "pie", or "bubble". A chart class without this field is invalid and initialization will result in a <code>ImproperlyConfigured</code> exception.
 </p>
 
-<pre><code class="language-python">from charting import Chart
+<pre><code class="language-python">from jchart import Chart
 
 class LineChart(Chart):
     chart_type = 'line'</code></pre>
@@ -80,7 +82,7 @@ class LineChart(Chart):
     The <code>get_datasets</code> method should return a list of datasets this chart should display. Where a dataset is a dictionary with key/value configuration pairs (see the Chart.JS <a href="http://www.chartjs.org/docs/#line-chart-dataset-structure">documentation</a>).
 </p>
 
-<pre><code class="language-python">from charting import Chart
+<pre><code class="language-python">from jchart import Chart
 
 class LineChart(Chart):
     chart_type = 'line'
@@ -98,15 +100,13 @@ class LineChart(Chart):
 </h5>
 
 <p>
-    This method alows you to return a list of labels for your datasets.
-    They should be ordered in the same way as you return your datasets.
-    Thus <code>label[0]</code> belongs to <code>dataset[0]</code>, etc.
+    This method allows you to set the Chart.JS <code>data.labels</code> parameter. Which allows you to configure <a href="http://www.chartjs.org/docs/#scales-category-scale">categorical axes</a>. For an example on how to use this feature see this <a href="#pie-chart">pie chart</a>.
 </p>
 
-<pre><code class="language-python">from charting import Chart
+<pre><code class="language-python">from jchart import Chart
 
-class LineChart(Chart):
-    chart_type = 'line'
+class PieChart(Chart):
+    chart_type = 'pie'
 
     def get_labels(self, **kwargs):
         return ['Red', 'Blue']</code></pre>
@@ -134,15 +134,26 @@ class LineChart(Chart):
 </p>
 
 <p>
-    All of these fields map to the same key in the Chart.JS 'options' object.
+    All of these fields map to the same key in the Chart.JS <a href="http://www.chartjs.org/docs/#chart-configuration-creating-a-chart-with-options">'options' object</a>. For instance, if you wanted to create a chart that does not render responsively you would set the responsive class field to false:
+</p>
+
+<pre><code class="language-python">from jchart import Chart
+
+class UnresponsiveLineChart(Chart):
+    chart_type = 'line'
+    responsive = False
+    # ...</code></pre>
+
+<p>
+    Most of these class fields require either a list of dicitonaries or a dictionary. With the exception of <code>responsive</code> which should be a boolean value. Be sure to read the Chart.JS <a href="http://www.chartjs.org/docs/#chart-configuration-common-chart-configuration">documentation</a> on how to use these configuration options.
 </p>
 
 <p>
-    For your convenience there are some methods located in <code>charting.config</code> which can be used to produce correct dictionaries to configure Chart.JS properties. Most of these methods only serve as a validation step for your input configuration but some can also transform the input configuration. Lets take a look at an example, how would you configure the X-Axis so it wouldn't be displayed:
+    For your convenience there are some methods located in <code>jchart.config</code> which can be used to produce correct dictionaries to configure Chart.JS properties. Most of these methods only serve as a validation step for your input configuration but some can also transform the input configuration. Lets take a look at an example, how would you configure the X-Axis so it wouldn't be displayed:
 </p>
 
-<pre><code class="language-python">from charting import Chart
-from charting.config import Axes
+<pre><code class="language-python">from jchart import Chart
+from jchart.config import Axes
 
 class LineChart(Chart):
     chart_type = 'line'
@@ -151,11 +162,11 @@ class LineChart(Chart):
     }</code></pre>
 
 <p>
-    <code>charting.config</code> also contains a method to create dataset configuration dictionaries. One of the advantages of using this method is that it includes a special property <code>color</code> which can be used to automatically set the values for: 'backgroundColor', 'pointBackgroundColor', 'borderColor', 'pointBorderColor', and 'pointStrokeColor'.
+    <code>jchart.config</code> also contains a method to create dataset configuration dictionaries. One of the advantages of using this method is that it includes a special property <code>color</code> which can be used to automatically set the values for: 'backgroundColor', 'pointBackgroundColor', 'borderColor', 'pointBorderColor', and 'pointStrokeColor'.
 </p>
 
-<pre><code class="language-python">from charting import Chart
-from charting.config import Axes
+<pre><code class="language-python">from jchart import Chart
+from jchart.config import Axes
 
 class LineChart(Chart):
     chart_type = 'line'
@@ -164,7 +175,7 @@ class LineChart(Chart):
         return [DataSet(color=(255, 255, 255), data=[])]</code></pre>
 
 <p>
-    The <code>charting.config</code> module contains convenient methods for the below listed properties. However keep in mind that you are in no way obligated to use these methods, you could also supply normal Python dictionaries in the place of these method calls.
+    The <code>jchart.config</code> module contains methods for the properties listed below. Keep in mind that you are in no way obligated to use these methods, you could also supply Python dictionaries in the place of these method calls.
     
     <h5>Available Configuration Convenience methods:</h5>
     <code>Axes</code>, <code>ScaleLabel</code>, <code>Tick</code>, <code>DataSet</code>, <code>Tooltips</code>, <code>Legend</code>, <code>LegendLabel</code>, <code>Title</code>, <code>Hover</code>, <code>InteractionModes</code>, <code>Animation</code>, <code>Element</code>, <code>ElementArc</code>, <code>ElementLine</code>, <code>ElementPoint</code>, <code>ElementRectangle</code>
@@ -182,10 +193,12 @@ class LineChart(Chart):
     chart instance to render the chart.
 </p>
 
-<pre><code class="language-python"># LineChart is a class inheriting from charting.Chart
-render(request, 'template.html', {
-    'line_chart': LineChart(),
-})</code></pre>
+<pre><code class="language-python"># LineChart is a class inheriting from jchart.Chart
+
+def some_view(request):
+    render(request, 'template.html', {
+        'line_chart': LineChart(),
+    })</code></pre>
 
 <p>
     The following code is an example of how to render this line chart
@@ -207,14 +220,12 @@ render(request, 'template.html', {
 </p>
 
 <p>
-    To do this we need to setup a url endpoint from which to load the chart's data.
-    There is a classmethod available on `ChartView` to automatically create a view
-    which exposes the chart's configuration data as JSON on a HTTP get request:
+    To do this we need to setup a url endpoint from which to load the chart's data. There is a classmethod available on <code>jchart.ChartView</code> to automatically create a view which exposes the chart's configuration data as JSON on a HTTP get request:
 </p>
 
-<pre><code class="language-python">from charting.views import ChartView
+<pre><code class="language-python">from jchart.views import ChartView
 
-# LineChart is a class inheriting from charting.Chart
+# LineChart is a class inheriting from jchart.Chart
 line_chart = LineChart()
 
 urlpatterns = [
@@ -222,14 +233,11 @@ urlpatterns = [
 ]</code></pre>
 
 <p>
-    You can use a custom templatetag inside your Django template to load this chart
-    asynchronously. The custom tag behaves like the Django url templatetag and any
-    positional or keyword arguments supplied to it are used to resolve the url for
-    the given url name. In this example the url does not require any more parameters
+    You can use a custom templatetag inside your Django template to load this chart asynchronously. The custom tag behaves like the Django url templatetag and any positional or keyword arguments supplied to it are used to resolve the url for the given url name. In this example the url does not require any url parameters
     to be resolved:
 </p>
 
-<pre><code class="language-python">{&#37; load charting &#37;}
+<pre><code class="language-python">{&#37; load jchart &#37;}
 
 {&#37; render_chart 'line_chart' &#37;}
 </code></pre>
@@ -250,8 +258,3 @@ window.addEventListener("DOMContentLoaded", function() {
     });
 });
 &lt;/script&gt;</code></pre>
-
-
-### Example Project
-
-...
