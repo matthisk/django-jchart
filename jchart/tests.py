@@ -254,7 +254,9 @@ class ChartViewTestCase(TestCase):
         response = chart_view.get(request)
 
         self.assertEquals(response.status_code, 200)
-        data = json.loads(response.content)
+        charset = getattr(response, 'charset', 'utf-8')
+        content = response.content.encode(charset)
+        data = json.loads(content)
 
         self.assertIn('data', data)
         self.assertIn('options', data)
