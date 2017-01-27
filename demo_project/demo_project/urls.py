@@ -3,7 +3,7 @@ from django.contrib import admin
 
 from demo import views
 from demo import charts
-from chart.views import ChartView
+from jchart.views import ChartView
 
 admin.autodiscover()
 

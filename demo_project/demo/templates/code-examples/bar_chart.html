@@ -1,6 +1,6 @@
 <pre><code class="language-python"># charts.py
-from chart import Chart
-from chart.config import Axes, DataSet, rgba
+from jchart import Chart
+from jchart.config import Axes, DataSet, rgba
 
 class BarChart(Chart):
     chart_type = 'bar'
@@ -28,7 +28,7 @@ class BarChart(Chart):
 
 # urls.py
 from demo import charts
-from chart.views import ChartView
+from jchart.views import ChartView
 
 urlpatterns = [
     url(r'^charts/bar_chart/$',
