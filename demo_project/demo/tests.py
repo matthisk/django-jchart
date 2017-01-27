@@ -12,7 +12,7 @@ class HomePageTestCase(TestCase):
 
     def test_home(self):
         response = self.client.get('/')
-        self.assertContains(response, 'Django-Charting')
+        self.assertContains(response, 'Django-JChart')
         self.assertContains(response, '<canvas', count=14)
         self.assertContains(response, 'new Chart(ctx, {', count=7)
         self.assertContains(response, 'new Chart(ctx, configuration', count=8)
