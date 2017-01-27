@@ -25,9 +25,9 @@ install:
   - travis_retry pip install python-coveralls
   - travis_retry pip install $DJANGO
 script:
-  - cd demo_project && coverage run manage.py test jchart demo
+  - coverage run demo_project/manage.py test jchart demo
 after_script:
   # ensure we validate against pep standards
   - "pep8 --exclude=migrations --ignore=E501,E225,W293,E126,E123,E121 jchart"
 after_success:
-  - cd demo_project && travis_retry coveralls
+  - travis_retry coveralls
