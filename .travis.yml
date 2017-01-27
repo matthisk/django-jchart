@@ -30,4 +30,4 @@ after_script:
   # ensure we validate against pep standards
   - "pep8 --exclude=migrations --ignore=E501,E225,W293,E126,E123,E121 jchart"
 after_success:
-  - travis_retry coveralls --data_file=demo_project/.coverage
+  - cd demo_project && travis_retry coveralls
