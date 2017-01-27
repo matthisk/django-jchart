@@ -6,7 +6,7 @@ This Django app enables you to configure and render <a href="http://www.chartjs.
 
 - Authors: Matthisk Heimensen
 - Licence: BSD
-- Compatibility: Django 1.5+, python2.7 up to python3.3
+- Compatibility: Django 1.5+, python2.7 up to python3.5
 - Project URL: https://github.com/matthisk/django-jchart
 
 ### Getting Started
