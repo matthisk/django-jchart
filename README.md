@@ -1,4 +1,4 @@
-# django-chart
+# django-jchart
 
 [![Build Status](https://travis-ci.org/matthisk/django-jchart.svg?branch=master)](https://travis-ci.org/matthisk/django-jchart) [![Coverage Status](https://coveralls.io/repos/github/matthisk/django-jchart/badge.svg?branch=master)](https://coveralls.io/github/matthisk/django-jchart?branch=master)
 [![PyPI version](https://badge.fury.io/py/django-jchart.svg)](https://badge.fury.io/py/django-jchart)
