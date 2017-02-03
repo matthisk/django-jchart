@@ -44,5 +44,5 @@ class ChartView(View, JSONResponseMixin):
         """
         Main entry. This View only responds to GET requests.
         """
-        context = self.chart_instance.chartjs_configuration(**kwargs)
+        context = self.chart_instance.chartjs_configuration(*args, **kwargs)
         return self.render_json_response(context)

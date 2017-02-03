@@ -1,5 +1,5 @@
 import os
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 with open(os.path.join(os.path.dirname(__file__), 'README.md')) as readme:
@@ -18,18 +18,16 @@ extras_require = {
 }
 
 setup(
-    name='django-chart',
-    version='0.1.0',
-    packages=['django_chart'],
+    name='django-jchart',
+    version='0.1.1',
+    packages=find_packages(),
     include_package_data=True,
     install_requires=requirements,
     extras_require=extras_require,
-    tests_require=['django_chart[test]'],
-    test_suite='runtests.runtests',
     license='BSD License',
     description='A Django App to plot charts using the excellent Chart.JS library.',
     long_description=README,
-    url='https://github.com/matthisk/django-chart',
+    url='https://github.com/matthisk/django-jchart',
     author='Matthisk Heimensen',
     author_email='m@tthisk.nl',
     classifiers=[

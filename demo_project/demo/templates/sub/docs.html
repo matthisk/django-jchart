@@ -5,7 +5,7 @@
 </h3>
 
 <p>
-    This Django app enables you to configure and render <a href="http://www.chartjs.org/">Chart.JS</a> charts directly from your Django codebase. Charts can than either be rendered directly into your Django template or served asynchronously to the webbrowser.
+    This Django app enables you to configure and render <a href="http://www.chartjs.org/">Chart.JS</a> charts directly from your Django codebase. These charts can be rendered directly in your html templates, or served asynchronously on a Django url.
 </p>
 
 <h4 class="section-title" id="docs-installation">
@@ -57,11 +57,11 @@ you will also need to include jQuery:
 </h4>
 
 <p>
-    At the heart of this charting library lies the <code>Chart</code> class. This class describes a chart, and defines which data it should display. The chart's class fields map to <a href="http://www.chartjs.org/docs/#chart-configuration">Chart.JS options</a> which describe how the chart should render and behave. There is a method that should be implemented in the chart class that defines which datasets are to be plotted, this method should be called <code>get_datasets</code>.
+    At the heart of this charting library lies the <code>Chart</code> class. This class describes a chart and defines which data it should display. The chart's 'class fields' map to <a href="http://www.chartjs.org/docs/#chart-configuration">Chart.JS options</a> which describe how the chart should render and behave. By overriding the <code>get_datasets</code> method on your <code>Chart</code> instance you can define which data should be displayed.
 </p>
 
 <p>
-    To define which type of chart you want to render (e.g. a line or bar chart), your chart class should set it's class field <code>chart_type</code> to one of "line", "bar", "radar", "polarArea", "pie", or "bubble". A chart class without this field is invalid and initialization will result in a <code>ImproperlyConfigured</code> exception.
+    To define which type of chart you want to render (e.g. a line or bar chart), your chart class should set its class field <code>chart_type</code> to one of "line", "bar", "radar", "polarArea", "pie", or "bubble". A chart class without this field is invalid and initialization will result in an <code>ImproperlyConfigured</code> exception.
 </p>
 
 <pre><code class="language-python">from jchart import Chart
@@ -146,7 +146,7 @@ class UnresponsiveLineChart(Chart):
 </p>
 
 <p>
-    For your convenience there are some methods located in <code>jchart.config</code> which can be used to produce correct dictionaries to configure Chart.JS properties. Most of these methods only serve as a validation step for your input configuration but some can also transform the input configuration. Lets take a look at an example, how would you configure the X-Axis so it wouldn't be displayed:
+    For your convenience there are some methods located in <code>jchart.config</code> which can be used to produce correct dictionaries to configure Chart.JS properties. Most of these methods only serve as a validation step for your input configuration but some can also transform their input. Let's take a look at an example, how would you configure the X-Axis so it is not to be displayed:
 </p>
 
 <pre><code class="language-python">from jchart import Chart
@@ -174,7 +174,7 @@ class LineChart(Chart):
 <p>
     The <code>jchart.config</code> module contains methods for the properties listed below. Keep in mind that you are in no way obligated to use these methods, you could also supply Python dictionaries in the place of these method calls.
     
-    <h5>Available Configuration Convenience methods:</h5>
+    <h5>Available configuration methods:</h5>
     <code>Axes</code>, <code>ScaleLabel</code>, <code>Tick</code>, <code>DataSet</code>, <code>Tooltips</code>, <code>Legend</code>, <code>LegendLabel</code>, <code>Title</code>, <code>Hover</code>, <code>InteractionModes</code>, <code>Animation</code>, <code>Element</code>, <code>ElementArc</code>, <code>ElementLine</code>, <code>ElementPoint</code>, <code>ElementRectangle</code>
 </p>
 
@@ -211,13 +211,11 @@ def some_view(request):
 </h4>
 
 <p>
-    While rendering the chart directly into your HTML template, all the data
-    needed for the chart is transmitted on the page's HTTP request. It is
-    also possible to load the chart (and its required data) asynchronous.
+    When rendering the chart directly into your HTML template, all the data needed for the chart is transmitted on the page's HTTP request. It is also possible to load the chart (and its required data) asynchronous.
 </p>
 
 <p>
-    To do this we need to setup a url endpoint from which to load the chart's data. There is a classmethod available on <code>jchart.ChartView</code> to automatically create a view which exposes the chart's configuration data as JSON on a HTTP get request:
+    To do this we need to setup a url endpoint from which to load the chart's data. There is a classmethod available on <code>jchart.views.ChartView</code> to automatically create a view which exposes the chart's configuration data as JSON on a HTTP get request:
 </p>
 
 <pre><code class="language-python">from jchart.views import ChartView
@@ -255,3 +253,62 @@ window.addEventListener("DOMContentLoaded", function() {
     });
 });
 &lt;/script&gt;</code></pre>
+
+<h4 class="section-title" id="docs-chart-parameterization">
+    <a class="fragment-link" href="#docs-chart-parameterization">
+        Chart Parameterization
+    </a>
+</h4>
+
+<p>
+    It can often be useful to reuse the same chart for different datasets. This can either be done by subclassing an existing chart class and overriding its <code>get_datasets</code> method. But there is another way to do this. Any arguments given to the <code>as_html</code> method are supplied to your <code>get_datasets</code> method. This makes it possible to parameterize the output of <code>get_datasets</code>
+</p>
+
+<p>
+    Let's have a look at an example. Imagine we have price point data stored in a model called <code>Price</code> and this model has a field called <code>currency_type</code>. We could render the chart for different currency types by accepting the value for this field as a parameter to <code>get_datasets</code>.    
+</p>
+
+<pre><code class="language-python">from jchart import Chart
+from core.models import Price
+
+class PriceChart(Chart):
+    chart_type = 'line'
+
+    def get_datasets(self, currency_type):
+        prices = Price.objects.filter(currency_type=currency_type)
+
+        data = [{'x': price.date, 'y': price.point} for price in prices]
+
+        return [DataSet(data=data)]</code></pre>
+
+<p>
+    If we supply an instance of this chart to the context of our template, we could use this to render two different charts:
+</p>
+
+<pre><code class="language-python">{&#123; price_chart.as_html 'euro' &#125;}
+
+{&#123; price_chart.as_html 'dollar' &#125;}</code></pre>
+
+<p>
+    For asynchronous charts any url parameters are passed to the <code>get_datasets</code> method.
+</p>
+
+<pre><code class="language-python">from jchart.views import ChartView
+from .charts import PriceChart
+
+price_chart = PriceChart()
+
+urlpatterns = [
+    url(r'^currency_chart/(?P<>\w+)/$',
+        ChartView.from_chart(price_chart))
+]</code></pre>
+
+<p>
+    To render this chart asynchronously we have to supply the url parameter as a second argument to the <code>render_chart</code> template tag, like so:
+</p>
+
+<pre><code class="language-python">{&#37; load jchart &#37;}
+
+{&#37; render_chart 'price_chart' 'euro' &#37;}
+
+{&#37; render_chart 'price_chart' 'dollar' &#37;}</code></pre>

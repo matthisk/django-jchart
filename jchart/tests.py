@@ -27,9 +27,23 @@ class LineChart(Chart):
                        )],
     }
 
-    def get_datasets(self, **kwargs):
+    def get_datasets(self, *args, **kwargs):
         data = [1, 2, 3, 4, 5, 6, 7, 8, 9]
         return [dict(label='Test Line Chart', data=data)]
+
+
+class LineChartParameterized(LineChart):
+
+    def get_datasets(self, currency_type):
+        eur_data = range(10)
+        do_data = range(10, 20)
+
+        if currency_type == 'euro':
+            return [dict(label='Euro Chart', data=eur_data)]
+        elif currency_type == 'dollar':
+            return [dict(label='Dollar Chart', data=do_data)]
+
+        raise ValueError('Unkown currency type: {}'.format(currency_type))
 
 
 class LineChartUnresponsive(LineChart):
@@ -40,7 +54,7 @@ class BarChart(Chart):
     chart_type = 'radar'
     title = Title(text='Test Title')
 
-    def get_datasets(self, **kwargs):
+    def get_datasets(self, *args, **kwargs):
         data = []
         return [dict(label='Test Radar Chart', data=data)]
 
@@ -49,7 +63,7 @@ class PolarChart(Chart):
     chart_type = 'polarArea'
     title = Title(text='Test Title')
 
-    def get_datasets(self, **kwargs):
+    def get_datasets(self, *args, **kwargs):
         data = []
         return [dict(label='Test Polar Chart', data=data)]
 
@@ -58,7 +72,7 @@ class RadarChart(Chart):
     chart_type = 'bar'
     title = Title(text='Test Title')
 
-    def get_datasets(self, **kwargs):
+    def get_datasets(self, *args, **kwargs):
         data = []
         return [dict(label='Test Line Chart', data=data)]
 
@@ -67,7 +81,7 @@ class PieChart(Chart):
     chart_type = 'pie'
     title = Title(text='Test Title')
 
-    def get_datasets(self, **kwargs):
+    def get_datasets(self, *args, **kwargs):
         data = []
         return [dict(label='Test Pie Chart', data=data)]
 
@@ -76,13 +90,14 @@ class BubbleChart(Chart):
     chart_type = 'bubble'
     title = Title(text='Test Title')
 
-    def get_datasets(self, **kwargs):
+    def get_datasets(self, *args, **kwargs):
         data = []
         return [dict(label='Test Bubble Chart', data=data)]
 
 
 class ChartViewTestToolkit(TestCase):
     classes = None
+    url_kwargs = {}
 
     @property
     def request(self):
@@ -92,15 +107,16 @@ class ChartViewTestToolkit(TestCase):
     @property
     def responses(self):
         for klass in self.classes:
-            yield ChartView.from_chart(klass())(self.request)
+            yield ChartView.from_chart(klass())(self.request, **self.url_kwargs)
 
 
 class ChartViewTestToolkitSolo(ChartViewTestToolkit):
     klass = None
+    url_kwargs = {}
 
     @property
     def response(self):
-        return ChartView.from_chart(self.klass())(self.request)
+        return ChartView.from_chart(self.klass())(self.request, **self.url_kwargs)
         return self.klass.as_view()(self.request)
 
     @property
@@ -294,13 +310,25 @@ class ChartTestCase(TestCase):
 
     def test_chart_render_html(self):
         line_chart = LineChart()
-        html = line_chart.render_html()
+
+        context = {
+            'html_id': 'test-id',
+            'chart': line_chart,
+            'chart_configuration': line_chart.get_configuration(),
+        }
+        html = line_chart.render_html(context)
 
         self.assertNotIn('<script', html)
 
     def test_chart_render_js(self):
         line_chart = LineChart()
-        js = line_chart.render_js()
+
+        context = {
+            'html_id': 'test-id',
+            'chart': line_chart,
+            'chart_configuration': line_chart.get_configuration(),
+        }
+        js = line_chart.render_js(context)
 
         self.assertNotIn('<canvas', js)
 
@@ -308,3 +336,26 @@ class ChartTestCase(TestCase):
         LineChartUnresponsive(height=500)
         self.assertRaises(ImproperlyConfigured,
                           lambda: LineChart(height=500))
+
+    def test_chart_parameterization(self):
+        chart = LineChartParameterized()
+
+        self.assertNotIn('Dollar Chart', chart.as_html('euro'))
+        self.assertIn('Euro Chart', chart.as_html('euro'))
+
+        self.assertNotIn('Euro Chart', chart.as_html('dollar'))
+        self.assertIn('Dollar Chart', chart.as_html('dollar'))
+
+
+class AsyncChartParameterization(ChartViewTestToolkitSolo):
+    klass = LineChartParameterized
+
+    def test_euro(self):
+        self.url_kwargs = dict(currency_type='euro')
+        self.assertEquals('Euro Chart',
+                          self.data['data']['datasets'][0]['label'])
+
+    def test_dollar(self):
+        self.url_kwargs = dict(currency_type='dollar')
+        self.assertEquals('Dollar Chart',
+                          self.data['data']['datasets'][0]['label'])

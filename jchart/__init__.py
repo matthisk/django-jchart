@@ -1,8 +1,14 @@
-import json
 import uuid
 
 from django.template.loader import render_to_string
 from django.core.exceptions import ImproperlyConfigured
+from django.core.serializers.json import DjangoJSONEncoder
+
+# Django 1.5+ compat
+try:
+    import json
+except ImportError:  # pragma: no cover
+    from django.utils import simplejson as json
 
 
 class Chart(object):
@@ -17,11 +23,11 @@ class Chart(object):
     responsive = None
 
     def __init__(self, height=None, width=None,
-                 html_id=None, url_kwargs=None):
-        self.kwargs = url_kwargs
+                 html_id=None, json_encoder_class=DjangoJSONEncoder):
         self.height = height
         self.width = width
-        self.html_id = html_id or 'chart-{}'.format(uuid.uuid4())
+        self.json_encoder_class = json_encoder_class
+        self.html_id = html_id
 
         if ((height is not None or width is not None) and
                 (self.responsive is None or self.responsive)):
@@ -30,6 +36,9 @@ class Chart(object):
                 'effect if the chart is in responsive mode. '
                 'Disable responsive mode by setting chart.responsive '
                 'to False')
+
+    def _gen_html_id(self):
+        return self.html_id or 'chart-{}'.format(uuid.uuid4())
 
     def _get_options(self):
         option_keys = {'scales', 'layout', 'title', 'legend',
@@ -52,48 +61,47 @@ class Chart(object):
                 'Which is one of `line` `bar` `radar` `polarArea` `pie` `bubble`'
                 'or one a custom chart type.')
 
-    @property
-    def configuration(self):
-        config = self.chartjs_configuration()
-        return json.dumps(config)
+    def get_configuration(self, *args, **kwargs):
+        config = self.chartjs_configuration(*args, **kwargs)
+        return json.dumps(config, cls=self.json_encoder_class)
 
-    def chartjs_configuration(self, **kwargs):
+    def chartjs_configuration(self, *args, **kwargs):
         self._assert_chart_type()
 
         data = {}
         data['type'] = self.chart_type
         data['options'] = self._get_options()
         data['data'] = {
-            'labels': self.get_labels(**kwargs),
-            'datasets': self.get_datasets(**kwargs),
+            'labels': self.get_labels(*args, **kwargs),
+            'datasets': self.get_datasets(*args, **kwargs),
         }
 
         return data
 
-    def get_labels(self, **kwargs):
+    def get_labels(self, *args, **kwargs):
         return []
 
-    def get_datasets(self, **kwargs):
+    def get_datasets(self, *args, **kwargs):
         raise NotImplementedError(
             'You should return a list of DataSet dictionaries'
             '(i.e.: [DataSet(**keys), ...]'
             )
 
-    def as_html(self):
+    def as_html(self, *args, **kwargs):
         context = {
-            'html': self.render_html(),
-            'js': self.render_js(),
+            'html_id': self._gen_html_id(),
+            'chart': self,
+            'chart_configuration': self.get_configuration(*args, **kwargs),
+        }
+
+        context = {
+            'html': self.render_html(context),
+            'js': self.render_js(context),
         }
         return render_to_string('charting/chart.html', context)
 
-    def render_html(self):
-        context = {
-            'chart': self
-        }
-        return render_to_string('charting/html.html', context)
-
-    def render_js(self):
-        context = {
-            'chart': self
-        }
+    def render_js(self, context):
         return render_to_string('charting/js.html', context)
+
+    def render_html(self, context):
+        return render_to_string('charting/html.html', context)
