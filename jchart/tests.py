@@ -35,8 +35,8 @@ class LineChart(Chart):
 class LineChartParameterized(LineChart):
 
     def get_datasets(self, currency_type):
-        eur_data = range(10)
-        do_data = range(10, 20)
+        eur_data = list(range(10))
+        do_data = list(range(10, 20))
 
         if currency_type == 'euro':
             return [dict(label='Euro Chart', data=eur_data)]
