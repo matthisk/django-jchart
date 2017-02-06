@@ -259,3 +259,8 @@ window.addEventListener("DOMContentLoaded", function() {
     });
 });
 &lt;/script&gt;</code></pre>
+
+### ToDO
+
+* Composable datasources (instead of having to rely on inheritance)
+* Compare django-jchart to other Django chartig libraries (in the readme)
