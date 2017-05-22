@@ -29,6 +29,18 @@ Add django-chart to your installed apps.
     'jchart',
 )</code></pre>
 
+<p>
+    Enable template loading from app folders by adding the following property to your <i>TEMPLATES</i> django configuration:
+</p>
+
+<pre><code class="language-python">TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        # ...
+    }]
+</code></pre>
+
 <h4 class="section-title" id="docs-frontend-deps">
     <a class="fragment-link" href="#docs-frontend-deps">
         Frontend Dependencies
