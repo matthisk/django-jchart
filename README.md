@@ -27,6 +27,18 @@ INSTALLED_APPS = (
 )
 ```
 
+<p>
+    Enable template loading from app folders by adding the following property to your <i>TEMPLATES</i> django configuration:
+</p>
+
+<pre><code class="language-python">TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        # ...
+    }]
+</code></pre>
+
 ### (Code) Examples
 
 The [main webpage](http://django-jchart.matthisk.nl/) for this repository contains examples for all different chart types. 
