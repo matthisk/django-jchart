@@ -294,12 +294,12 @@ class PriceChart(Chart):
         return [DataSet(data=data)]</code></pre>
 
 <p>
-    If we supply an instance of this chart to the context of our template, we could use this to render two different charts:
+    If we supply an instance of this chart to the context of our template, we could use this to render two different charts. This is done by using the <code>render_chart</code> template tag to supply additional parameters to the <code>get_datasets</code> method:
 </p>
 
-<pre><code class="language-python">{&#123; price_chart.as_html 'euro' &#125;}
+<pre><code class="language-python">{&#37; render_chart price_chart 'euro' &#37;}
 
-{&#123; price_chart.as_html 'dollar' &#125;}</code></pre>
+{&#37; render_chart price_chart 'dollar' &#37;}</code></pre>
 
 <p>
     For asynchronous charts any url parameters are passed to the <code>get_datasets</code> method.
