@@ -1,4 +1,4 @@
-# django-chart
+# django-jchart
 
 [![Build Status](https://travis-ci.org/matthisk/django-jchart.svg?branch=master)](https://travis-ci.org/matthisk/django-jchart) [![Coverage Status](https://coveralls.io/repos/github/matthisk/django-jchart/badge.svg?branch=master)](https://coveralls.io/github/matthisk/django-jchart?branch=master)
 [![PyPI version](https://badge.fury.io/py/django-jchart.svg)](https://badge.fury.io/py/django-jchart)
@@ -26,6 +26,18 @@ INSTALLED_APPS = (
     'jchart',
 )
 ```
+
+<p>
+    Enable template loading from app folders by adding the following property to your <i>TEMPLATES</i> django configuration:
+</p>
+
+<pre><code class="language-python">TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'APP_DIRS': True,
+        # ...
+    }]
+</code></pre>
 
 ### (Code) Examples
 
@@ -259,3 +271,8 @@ window.addEventListener("DOMContentLoaded", function() {
     });
 });
 &lt;/script&gt;</code></pre>
+
+### ToDO
+
+* Composable datasources (instead of having to rely on inheritance)
+* Compare django-jchart to other Django chartig libraries (in the readme)
