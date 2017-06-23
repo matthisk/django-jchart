@@ -19,7 +19,7 @@ extras_require = {
 
 setup(
     name='django-jchart',
-    version='0.3.0',
+    version='0.3.1',
     packages=find_packages(),
     include_package_data=True,
     install_requires=requirements,
