@@ -276,3 +276,19 @@ window.addEventListener("DOMContentLoaded", function() {
 
 * Composable datasources (instead of having to rely on inheritance)
 * Compare django-jchart to other Django chartig libraries (in the readme)
+
+
+### Contributing
+
+#### Releasing
+
+* To release update the version of the package in `setup.py`.
+* Add release to `CHANGELOG.md`.
+* Run commands:
+
+```
+python setup.py sdist bdist_wheel --universal
+twine upload dist/*
+```
+
+* Add git tag to commit
