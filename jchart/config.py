@@ -13,7 +13,8 @@ def assert_color(colors):
 
 
 def Axes(**kwargs):
-    allowed_keys = {'type', 'display', 'position', 'id', 'gridLines', 'scaleLabel', 'ticks'}
+    allowed_keys = {'type', 'display', 'position', 'id', 'gridLines', 'scaleLabel', 'ticks',
+                    'barPercentage', 'categoryPercentage', 'barThickness', 'maxBarThickness'}
 
     assert_keys('Axes', allowed_keys, kwargs)
 
