@@ -12,6 +12,7 @@ except ImportError:  # pragma: no cover
 
 
 class Chart(object):
+    chart_type = None
     scales = None
     layout = None
     title = None
@@ -68,12 +69,19 @@ class Chart(object):
     def chartjs_configuration(self, *args, **kwargs):
         self._assert_chart_type()
 
+        datasets = self.get_datasets(*args, **kwargs)
+
+        if not isinstance(datasets, list):
+            raise ValueError('Expect `get_datasets` method on %s '
+                             'to return a list of DataSet objects '
+                             'or a list of Python dictionaries.' % self)
+
         data = {}
         data['type'] = self.chart_type
         data['options'] = self._get_options()
         data['data'] = {
             'labels': self.get_labels(*args, **kwargs),
-            'datasets': self.get_datasets(*args, **kwargs),
+            'datasets': datasets,
         }
 
         return data
