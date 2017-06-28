@@ -22,6 +22,7 @@ class Chart(object):
     animation = None
     elements = None
     responsive = None
+    options = None
 
     def __init__(self, height=None, width=None,
                  html_id=None, json_encoder_class=DjangoJSONEncoder):
@@ -46,8 +47,16 @@ class Chart(object):
                        'tooltips', 'hover', 'animation', 'elements',
                        'responsive'}
 
-        return {key: self._get_options_attr(key)
-                for key in option_keys if self._has_options_attr(key)}
+        result = {}
+        if self._has_options_attr('options') and isinstance(self.options, dict):
+            result = self.options
+
+        result.update({
+            key: self._get_options_attr(key)
+            for key in option_keys if self._has_options_attr(key)
+        })
+
+        return result
 
     def _get_options_attr(self, name):
         return getattr(self, name, False)

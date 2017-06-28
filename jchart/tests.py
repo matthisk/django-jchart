@@ -95,6 +95,20 @@ class BubbleChart(Chart):
         return [dict(label='Test Bubble Chart', data=data)]
 
 
+class OptionsChart(Chart):
+    chart_type = 'line'
+    title = Title(text='Precendence')
+    options = {
+        'title': Title(text='Overriden'),
+        'responsive': True,
+        'maintainAspectRatio': True,
+    }
+
+    def get_datasets(self, *args, **kwargs):
+        data = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+        return [dict(label='Test Line Chart', data=data)]
+
+
 class ChartViewTestToolkit(TestCase):
     classes = None
     url_kwargs = {}
@@ -359,3 +373,16 @@ class AsyncChartParameterization(ChartViewTestToolkitSolo):
         self.url_kwargs = dict(currency_type='dollar')
         self.assertEquals('Dollar Chart',
                           self.data['data']['datasets'][0]['label'])
+
+
+class OptionsChartTestCase(ChartViewTestToolkitSolo):
+    klass = OptionsChart
+
+    def test_precedence(self):
+        title = self.data['options']['title']['text']
+        responsive = self.data['options']['responsive']
+        maintainAspectRatio = self.data['options']['maintainAspectRatio']
+
+        self.assertEquals('Precendence', title)
+        self.assertTrue(responsive)
+        self.assertTrue(maintainAspectRatio)
