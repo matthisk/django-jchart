@@ -1,5 +1,9 @@
 ## Changelog
 
+### Version 0.4.0
+
+* Added custom chart configuration options through the use of the `options` class field
+
 ### Version 0.3.2
 
 * `get_datasets` method is type checked. When an instance of the `Chart` class returns somtehing different than a list this results in a ValueError
