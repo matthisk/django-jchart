@@ -81,7 +81,7 @@ class RadarChart(Chart):
                 DataSet(label="My Second dataset",
                         color=(255, 99, 132),
                         data=[28, 48, 40, 19, 96, 27, 100])
-                ]
+               ]
 
 
 class PolarChart(Chart):
