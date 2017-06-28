@@ -190,6 +190,21 @@ class LineChart(Chart):
     <code>Axes</code>, <code>ScaleLabel</code>, <code>Tick</code>, <code>DataSet</code>, <code>Tooltips</code>, <code>Legend</code>, <code>LegendLabel</code>, <code>Title</code>, <code>Hover</code>, <code>InteractionModes</code>, <code>Animation</code>, <code>Element</code>, <code>ElementArc</code>, <code>ElementLine</code>, <code>ElementPoint</code>, <code>ElementRectangle</code>
 </p>
 
+<p>
+    <h5>Custom configuration options</h5>
+    There is another special class field named <code>options</code> this has to be set to a dictionary and can be used to set any other Chart.JS configuration values that are not configurable through a predefined class field (e.g. <code>maintainAspectRatio</code>). The class fields have precedence over any configuration applied through the <code>options</code> dictionary.
+</p>
+
+<pre><code class="language-python">from jchart import Chart
+
+class OptionsChart(Chart):
+    chart_type = 'line'
+    options = {
+        'maintainAspectRatio': True
+    }
+    # ...
+</pre></code>
+
 <h4 class="section-title" id="docs-rendering-charts">
     <a class="fragment-link" href="#docs-rendering-charts">
         Rendering Charts
