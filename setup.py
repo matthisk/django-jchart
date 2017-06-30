@@ -19,7 +19,7 @@ extras_require = {
 
 setup(
     name='django-jchart',
-    version='0.4.0',
+    version='0.4.1',
     packages=find_packages(),
     include_package_data=True,
     install_requires=requirements,
@@ -31,6 +31,7 @@ setup(
     author='Matthisk Heimensen',
     author_email='m@tthisk.nl',
     classifiers=[
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
