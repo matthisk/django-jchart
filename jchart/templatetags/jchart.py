@@ -2,7 +2,10 @@ import uuid
 
 from django import template
 from django.template.loader import render_to_string
-from django.urls import reverse
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse  # maintain backwards compatibility for Django < 1.10
 
 from .. import Chart
 
