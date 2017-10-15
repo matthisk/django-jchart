@@ -1,5 +1,10 @@
 ## Changelog
 
+### Version 0.5.0
+
+* Better Django backwards compatibility
+* Improved sizing of the chart container html element
+
 ### Version 0.4.0
 
 * Added custom chart configuration options through the use of the `options` class field
