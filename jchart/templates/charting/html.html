@@ -1,2 +1,3 @@
-<canvas class="chart" id="{{ html_id }}" {% if chart.height %}height="{{ chart.height }}"{% endif %} {% if chart.width %}width="{{ chart.width }}"{% endif %}>
-</canvas>
+<div class="chart-container" style="position: relative; {% if chart.height %}height: {{ chart.height }}px;{% endif %} {% if chart.width %}width: {{ chart.width }}px{% endif %}">
+  <canvas class="chart" id="{{ html_id }}"></canvas>
+</div>

@@ -307,16 +307,16 @@ class ChartTestCase(TestCase):
         self.assertEquals(line_chart.width, 1000)
         self.assertEquals(line_chart.height, 500)
 
-        self.assertIn('height="500"', line_chart.as_html())
-        self.assertIn('width="1000"', line_chart.as_html())
+        self.assertIn('height: 500px', line_chart.as_html())
+        self.assertIn('width: 1000px', line_chart.as_html())
 
     def test_chart_no_dimension(self):
         line_chart = LineChart()
         self.assertEquals(line_chart.width, None)
         self.assertEquals(line_chart.height, None)
 
-        self.assertNotIn('height="', line_chart.as_html())
-        self.assertNotIn('width="', line_chart.as_html())
+        self.assertNotIn('height:', line_chart.as_html())
+        self.assertNotIn('width:', line_chart.as_html())
 
     def test_chart_html_id(self):
         line_chart = LineChart(html_id='test-id')
